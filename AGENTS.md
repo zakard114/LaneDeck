@@ -9,7 +9,7 @@
 
 ## Paths (Windows)
 
-- Workspace: `E:\IT_SPACES\AI\ZoomCamp\AIDT\02\AIDT_HW_02\`
+- Workspace: `E:\IT_SPACES\AI\ZoomCamp\AIDT\02\Development\LaneDeck\`
 - Caches / downloads: E: only — run `. E:\IT_SPACES\AI\scripts\use_e_drive.ps1` before `uv` / `npm`
 - Never put venv, caches, or model weights under `C:\Users\...`
 

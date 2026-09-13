@@ -1,41 +1,31 @@
 # LaneDeck
 
-Mini Kanban board for **AI Dev Tools Zoomcamp 2026 — Homework 2**.
+Lightweight Kanban board for organizing tasks across **Todo → Doing → Done**.
 
-Track a few cards across **Todo → Doing → Done**. Spec-first, then frontend (mocked API), OpenAPI, FastAPI, and SQLite.
+Spec-first build: frontend (mocked API) → OpenAPI → FastAPI → SQLite.
 
 ## Spec
 
 See [`_docs/specs.md`](_docs/specs.md).
 
-## Project idea
-
-Mini Kanban board (course option).
-
-## App name
-
-**LaneDeck**
-
-## Layout (planned)
+## Layout
 
 ```text
-AIDT_HW_02/
+LaneDeck/
   _docs/specs.md
   AGENTS.md
   README.md
-  frontend/     # Vite + React (next)
+  frontend/     # Vite + React + TypeScript
   backend/      # FastAPI + uv (next)
   openapi.yaml  # after FE service exists
 ```
 
 ## Commands
 
-*(Filled in as each layer is added.)*
-
 ```powershell
 . E:\IT_SPACES\AI\scripts\use_e_drive.ps1
 
-# Frontend (after scaffold)
+# Frontend
 cd frontend
 npm install
 npm run dev
@@ -47,6 +37,8 @@ uv run uvicorn ...   # exact command TBD
 uv run pytest -q
 ```
 
+Frontend runs at `http://127.0.0.1:5173`. Board data is mocked in `localStorage` via `src/api/cardsApi.ts` until the FastAPI backend is wired.
+
 ## Homework answers (draft)
 
 | Q | Answer |
@@ -54,7 +46,7 @@ uv run pytest -q
 | 1 Project | Mini Kanban board |
 | 2 App name | LaneDeck |
 | 3 Spec commit SHA | `cf878545446c6ab67ee7a4ccbfe61edcccaa6579` |
-| 4 FE start command | TBD |
+| 4 FE start command | `npm run dev` (from `frontend/`) |
 | 5 BE start command | TBD |
 | 6 FE → BE URL | TBD (`http://127.0.0.1:8000`) |
 | 7 Test command | TBD |
