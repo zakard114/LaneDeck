@@ -25,10 +25,16 @@
 
 ```powershell
 . E:\IT_SPACES\AI\scripts\use_e_drive.ps1
-uv sync
-uv add <PACKAGE>
+
+# Frontend
+cd frontend
+npm run dev
+
+# Backend
+cd backend
+uv sync --group dev
+uv run uvicorn lanedeck_backend.main:app --reload --host 127.0.0.1 --port 8000
 uv run pytest -q
-uv run python <file>
 ```
 
 ## Scope guard

@@ -8,6 +8,8 @@ Spec-first build: frontend (mocked API) → OpenAPI → FastAPI → SQLite.
 
 See [`_docs/specs.md`](_docs/specs.md).
 
+API contract: [`openapi.yaml`](openapi.yaml).
+
 ## Layout
 
 ```text
@@ -15,9 +17,9 @@ LaneDeck/
   _docs/specs.md
   AGENTS.md
   README.md
-  frontend/     # Vite + React + TypeScript
-  backend/      # FastAPI + uv (next)
-  openapi.yaml  # after FE service exists
+  openapi.yaml
+  frontend/     # Vite + React + TypeScript (localStorage mock for now)
+  backend/      # FastAPI + uv (in-memory mock store)
 ```
 
 ## Commands
@@ -30,14 +32,18 @@ cd frontend
 npm install
 npm run dev
 
-# Backend (after scaffold)
+# Backend
 cd backend
-uv sync
-uv run uvicorn ...   # exact command TBD
+uv sync --group dev
+uv run uvicorn lanedeck_backend.main:app --reload --host 127.0.0.1 --port 8000
+
+# Backend tests
+cd backend
 uv run pytest -q
 ```
 
-Frontend runs at `http://127.0.0.1:5173`. Board data is mocked in `localStorage` via `src/api/cardsApi.ts` until the FastAPI backend is wired.
+- Frontend: `http://127.0.0.1:5173` (still uses mocked `cardsApi` / localStorage)
+- Backend: `http://127.0.0.1:8000` · docs at `/docs`
 
 ## Homework answers (draft)
 
@@ -47,9 +53,9 @@ Frontend runs at `http://127.0.0.1:5173`. Board data is mocked in `localStorage`
 | 2 App name | LaneDeck |
 | 3 Spec commit SHA | `cf878545446c6ab67ee7a4ccbfe61edcccaa6579` |
 | 4 FE start command | `npm run dev` (from `frontend/`) |
-| 5 BE start command | TBD |
+| 5 BE start command | `uv run uvicorn lanedeck_backend.main:app --reload --host 127.0.0.1 --port 8000` (from `backend/`) |
 | 6 FE → BE URL | TBD (`http://127.0.0.1:8000`) |
-| 7 Test command | TBD |
+| 7 Test command | `uv run pytest -q` (from `backend/`) |
 
 ## Course
 
