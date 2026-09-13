@@ -16,7 +16,7 @@
 ## Workflow
 
 1. Follow `_docs/specs.md` — do not invent large features outside the spec
-2. Frontend first with a **central mocked service**; no real backend until asked
+2. Frontend first with a **central service** (`src/api/cardsApi.ts`); wire to HTTP after backend exists
 3. Derive OpenAPI from the FE service layer
 4. Backend: tests first where practical; mock store → SQLite
 5. Commit in small steps; no `Co-authored-by` / Cursor attribution on commits

@@ -18,7 +18,7 @@ LaneDeck/
   AGENTS.md
   README.md
   openapi.yaml
-  frontend/     # Vite + React + TypeScript (localStorage mock for now)
+  frontend/     # Vite + React + TypeScript → HTTP API
   backend/      # FastAPI + uv (in-memory mock store)
 ```
 
@@ -42,8 +42,9 @@ cd backend
 uv run pytest -q
 ```
 
-- Frontend: `http://127.0.0.1:5173` (still uses mocked `cardsApi` / localStorage)
+- Frontend: `http://127.0.0.1:5173`
 - Backend: `http://127.0.0.1:8000` · docs at `/docs`
+- FE → BE base URL: `http://127.0.0.1:8000` (override with `VITE_API_BASE_URL`)
 
 ## Homework answers (draft)
 
@@ -54,8 +55,9 @@ uv run pytest -q
 | 3 Spec commit SHA | `cf878545446c6ab67ee7a4ccbfe61edcccaa6579` |
 | 4 FE start command | `npm run dev` (from `frontend/`) |
 | 5 BE start command | `uv run uvicorn lanedeck_backend.main:app --reload --host 127.0.0.1 --port 8000` (from `backend/`) |
-| 6 FE → BE URL | TBD (`http://127.0.0.1:8000`) |
+| 6 FE → BE URL | `http://127.0.0.1:8000` |
 | 7 Test command | `uv run pytest -q` (from `backend/`) |
+
 
 ## Course
 

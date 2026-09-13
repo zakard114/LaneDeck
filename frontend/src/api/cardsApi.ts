@@ -1,114 +1,76 @@
 import type { Card, CreateCardInput, Lane, UpdateCardInput } from "../types";
-import { LANES } from "../types";
 
-const STORAGE_KEY = "lanedeck.cards.v1";
+/** Base URL the frontend uses to talk to the backend (Homework Q6). */
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "http://127.0.0.1:8000";
 
-function nowIso(): string {
-  return new Date().toISOString();
-}
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${API_BASE_URL}${path}`, {
+    headers: {
+      Accept: "application/json",
+      ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      ...init?.headers,
+    },
+    ...init,
+  });
 
-function newId(): string {
-  return crypto.randomUUID();
-}
-
-function normalizeTitle(title: string): string {
-  const trimmed = title.trim();
-  if (trimmed.length < 1 || trimmed.length > 200) {
-    throw new Error("Title must be 1–200 characters");
+  if (!res.ok) {
+    let detail = `${res.status} ${res.statusText}`;
+    try {
+      const body = (await res.json()) as { detail?: unknown };
+      if (typeof body.detail === "string") detail = body.detail;
+      else if (body.detail !== undefined) detail = JSON.stringify(body.detail);
+    } catch {
+      // ignore non-JSON error bodies
+    }
+    throw new Error(detail);
   }
-  return trimmed;
-}
 
-function readStore(): Card[] {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw) as Card[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
+  if (res.status === 204) {
+    return undefined as T;
   }
-}
 
-function writeStore(cards: Card[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
-}
-
-function delay<T>(value: T, ms = 120): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(value), ms));
+  return (await res.json()) as T;
 }
 
 /**
  * Central backend client for LaneDeck.
- * Currently mocked with localStorage; swap implementation to HTTP later.
+ * Talks to the FastAPI backend over HTTP.
  */
 export const cardsApi = {
   async health(): Promise<{ status: string }> {
-    return delay({ status: "ok" });
+    return request<{ status: string }>("/health");
   },
 
   async listCards(lane?: Lane): Promise<Card[]> {
-    let cards = readStore();
-    if (lane) cards = cards.filter((c) => c.lane === lane);
-    cards = [...cards].sort((a, b) => {
-      const laneOrder = LANES.indexOf(a.lane) - LANES.indexOf(b.lane);
-      if (laneOrder !== 0) return laneOrder;
-      return a.position - b.position;
-    });
-    return delay(cards);
+    const query = lane ? `?lane=${encodeURIComponent(lane)}` : "";
+    return request<Card[]>(`/api/cards${query}`);
   },
 
   async createCard(input: CreateCardInput): Promise<Card> {
-    const title = normalizeTitle(input.title);
-    const lane: Lane = input.lane ?? "todo";
-    const cards = readStore();
-    const position =
-      cards.filter((c) => c.lane === lane).reduce((max, c) => Math.max(max, c.position), -1) + 1;
-    const stamp = nowIso();
-    const card: Card = {
-      id: newId(),
-      title,
-      lane,
-      position,
-      createdAt: stamp,
-      updatedAt: stamp,
-    };
-    writeStore([...cards, card]);
-    return delay(card);
+    return request<Card>("/api/cards", {
+      method: "POST",
+      body: JSON.stringify({
+        title: input.title,
+        ...(input.lane ? { lane: input.lane } : {}),
+      }),
+    });
   },
 
   async updateCard(id: string, input: UpdateCardInput): Promise<Card> {
-    const cards = readStore();
-    const index = cards.findIndex((c) => c.id === id);
-    if (index < 0) throw new Error("Card not found");
-
-    const current = cards[index];
-    const next: Card = {
-      ...current,
-      title: input.title !== undefined ? normalizeTitle(input.title) : current.title,
-      lane: input.lane ?? current.lane,
-      position: input.position ?? current.position,
-      updatedAt: nowIso(),
-    };
-
-    // If moving lanes without an explicit position, append to target lane
-    if (input.lane && input.lane !== current.lane && input.position === undefined) {
-      next.position =
-        cards
-          .filter((c) => c.lane === input.lane && c.id !== id)
-          .reduce((max, c) => Math.max(max, c.position), -1) + 1;
-    }
-
-    const updated = [...cards];
-    updated[index] = next;
-    writeStore(updated);
-    return delay(next);
+    const body: UpdateCardInput = {};
+    if (input.title !== undefined) body.title = input.title;
+    if (input.lane !== undefined) body.lane = input.lane;
+    if (input.position !== undefined) body.position = input.position;
+    return request<Card>(`/api/cards/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    });
   },
 
   async deleteCard(id: string): Promise<void> {
-    const cards = readStore();
-    if (!cards.some((c) => c.id === id)) throw new Error("Card not found");
-    writeStore(cards.filter((c) => c.id !== id));
-    await delay(undefined);
+    await request<void>(`/api/cards/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+    });
   },
 };
