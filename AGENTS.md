@@ -33,7 +33,7 @@ npm run dev
 # Backend
 cd backend
 uv sync --group dev
-uv run uvicorn lanedeck_backend.main:app --reload --host 127.0.0.1 --port 8000
+uv run uvicorn lanedeck_backend.main:create_app --factory --reload --host 127.0.0.1 --port 8000
 uv run pytest -q
 ```
 

@@ -19,7 +19,7 @@ LaneDeck/
   README.md
   openapi.yaml
   frontend/     # Vite + React + TypeScript → HTTP API
-  backend/      # FastAPI + uv (in-memory mock store)
+  backend/      # FastAPI + uv + SQLAlchemy/SQLite
 ```
 
 ## Commands
@@ -35,7 +35,7 @@ npm run dev
 # Backend
 cd backend
 uv sync --group dev
-uv run uvicorn lanedeck_backend.main:app --reload --host 127.0.0.1 --port 8000
+uv run uvicorn lanedeck_backend.main:create_app --factory --reload --host 127.0.0.1 --port 8000
 
 # Backend tests
 cd backend
@@ -45,6 +45,7 @@ uv run pytest -q
 - Frontend: `http://127.0.0.1:5173`
 - Backend: `http://127.0.0.1:8000` · docs at `/docs`
 - FE → BE base URL: `http://127.0.0.1:8000` (override with `VITE_API_BASE_URL`)
+- DB: SQLite at `backend/data/app.db` by default; override with `DATABASE_URL` (Postgres-ready)
 
 ## Homework answers (draft)
 
@@ -54,7 +55,7 @@ uv run pytest -q
 | 2 App name | LaneDeck |
 | 3 Spec commit SHA | `cf878545446c6ab67ee7a4ccbfe61edcccaa6579` |
 | 4 FE start command | `npm run dev` (from `frontend/`) |
-| 5 BE start command | `uv run uvicorn lanedeck_backend.main:app --reload --host 127.0.0.1 --port 8000` (from `backend/`) |
+| 5 BE start command | `uv run uvicorn lanedeck_backend.main:create_app --factory --reload --host 127.0.0.1 --port 8000` (from `backend/`) |
 | 6 FE → BE URL | `http://127.0.0.1:8000` |
 | 7 Test command | `uv run pytest -q` (from `backend/`) |
 
