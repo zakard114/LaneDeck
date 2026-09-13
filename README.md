@@ -53,7 +53,7 @@ uv run pytest -q
 |---|--------|
 | 1 Project | Mini Kanban board |
 | 2 App name | LaneDeck |
-| 3 Spec commit SHA | *(see git log after foundation push)* |
+| 3 Spec commit SHA | `cf878545446c6ab67ee7a4ccbfe61edcccaa6579` |
 | 4 FE start command | TBD |
 | 5 BE start command | TBD |
 | 6 FE → BE URL | TBD (`http://127.0.0.1:8000`) |
