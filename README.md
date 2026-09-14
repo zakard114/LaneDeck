@@ -49,6 +49,9 @@ uv run pytest -q
 
 ## Homework answers (draft)
 
+Paste-ready answers and verification notes: [`AIDT_02_HW.md`](AIDT_02_HW.md)  
+(Module 01 style: `AIDT/01/AIDT_HW_chores/AIDT_01_HW.md`)
+
 | Q | Answer |
 |---|--------|
 | 1 Project | Mini Kanban board |
